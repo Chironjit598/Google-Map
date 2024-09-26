@@ -1,18 +1,41 @@
-import 'package:flutter/material.dart';
-import 'package:google_map/home_screen.dart';
 
-void main() {
-  runApp(const MyMap());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
+import 'core/dependency.dart';
+import 'core/route.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+  DependancyInjection di = DependancyInjection();
+  di.dependencies();
 }
 
-class MyMap extends StatelessWidget {
-  const MyMap({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, _) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          ),
+          initialRoute: AppRoute.initialRoute,
+          getPages: AppRoute.pages,
+        ); 
+      },
     );
   }
 }
